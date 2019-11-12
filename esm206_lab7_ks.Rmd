@@ -53,4 +53,32 @@ ggplot(flint_pb, aes(sample = pb_2min)) +
 # They are NOT normally distributed; we'll still say we want to compare means, and can do that comfortably because of CLT (sampling distribution of the means will be normal).
 ```
 
+We should also look at some statistics for comparison: 
+
+```{r}
+# Sample size (non-NA):
+n_immediate <- sum(!is.na(flint_pb$pb_immediate))
+n_flushed <- sum(!is.na(flint_pb$pb_2min))
+
+# Means (immediate v. 2 min flushing):
+mean_immediate <- mean(flint_pb$pb_immediate, na.rm = TRUE)
+mean_flushed <- mean(flint_pb$pb_2min, na.rm = TRUE)
+
+# Medians (immediate v. 2 min flushing):
+median_immediate <- median(flint_pb$pb_immediate, na.rm = TRUE)
+median_flushed <- median(flint_pb$pb_2min, na.rm = TRUE)
+
+# Standard deviations (immediate v. 2 min flushing):
+sd_immediate <- sd(flint_pb$pb_immediate, na.rm = TRUE)
+sd_flushed <- sd(flint_pb$pb_2min, na.rm = TRUE)
+
+# Lead concentrations measured in immediately collected samples are much higher than those in water collected after 2 min flushing. 
+```
+
+#### Two-sample, two-sided **paired** t-test:
+
+```{r}
+my_flint_test <- t.test(flint_pb$pb_immediate, flint_pb$pb_2min, paired = TRUE)
+```
+
 
