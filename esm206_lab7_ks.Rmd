@@ -1,0 +1,56 @@
+---
+title: "esm206_lab7_KS"
+author: "Katelin Seeto"
+date: "11/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+### Attach packages and install effsize, and kableExtra
+
+```{r}
+install.packages("effsize")
+install.packages("kableExtra")
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(effsize)
+library(kableExtra)
+
+```
+
+
+## Read in and explore Flint water data
+
+```{r}
+flint_pb <- read_csv("flint_water.csv") %>% 
+  clean_names() %>% 
+  rename(pb_immediate = pb_bottle_1_ppb_first_draw, 
+         pb_2min = pb_bottle_2_ppb_2_mins_flushing) 
+```
+
+## Visually explore data
+
+```{r}
+# Histograms:
+ggplot(flint_pb, aes(x = pb_immediate)) +
+  geom_histogram()
+
+ggplot(flint_pb, aes(x= pb_2min)) +
+  geom_histogram()
+
+# QQ Plot 
+ggplot(flint_pb, aes(sample = pb_immediate)) +
+  geom_qq()
+
+ggplot(flint_pb, aes(sample = pb_2min)) +
+  geom_qq()
+
+# They are NOT normally distributed; we'll still say we want to compare means, and can do that comfortably because of CLT (sampling distribution of the means will be normal).
+```
+
+
