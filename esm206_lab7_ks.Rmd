@@ -77,8 +77,45 @@ sd_flushed <- sd(flint_pb$pb_2min, na.rm = TRUE)
 
 #### Two-sample, two-sided **paired** t-test:
 
+Perform the test by inputting the sample vectors, and adding argument `paired = TRUE`:
 ```{r}
 my_flint_test <- t.test(flint_pb$pb_immediate, flint_pb$pb_2min, paired = TRUE)
 ```
 
+#### Two-sample, ONE-sided **paired** t-test:
+
+What if our question isn't "do the means differ," but instead "are mean lead concentrations in water after 2-min flushing *LESS* than in immediately sampled water?"
+
+```{r}
+flushed_less_ttest <- t.test(flint_pb$pb_immediate, 
+                             flint_pb$pb_2min, 
+                             paired = TRUE, 
+                             alternative = "less")
+```
+
+### Cohen's *d* effect size
+
+```{r}
+# Creating a function called 'calc_d' to calculate Cohen's d effect size
+# Here, a and b will be our sample vectors 
+
+calc_d <- function(a, b) {
+  sd_pooled <- sqrt((sd(a, na.rm = TRUE)^2 + sd(b, na.rm = TRUE)^2)/2) # SD pooled
+  x <- (mean(a, na.rm = TRUE) - mean(b, na.rm = TRUE))/sd_pooled # Complete equation
+  return(x)
+}
+
+# Then apply that function to our samples: 
+
+flint_d_myfunction <- calc_d(flint_pb$pb_immediate, flint_pb$pb_2min)
+# d = 0.41 (moderate effect size)
+```
+
+Or we could use the existing `effsize::cohen.d()` function instead of creating our own. Let's use it here to check that results match for our function and the `cohen.d` function: 
+
+```{r}
+flint_d <- effsize::cohen.d(flint_pb$pb_immediate, flint_pb$pb_2min, na.rm = TRUE)
+
+# Same returned! Cohen's d = 0.41 (moderate effect size)
+```
 
